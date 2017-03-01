@@ -70,6 +70,16 @@
           this.state = {
             data: []
           }
+          this.apiURL = this.apiUrl = 'http://58b6e309889438120003f1ce.mockapi.io/todos'
+        }
+        lifecycle method
+        componentDidMount() {
+          // make http request with axios
+          axios.get(this.apiUrl)
+            .then((res) => {
+              // set state with result
+              this.setState({ data: res.data });
+            });
         }
 
         // add todo handler
