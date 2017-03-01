@@ -1,0 +1,63 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>To-Do List React Application</title>
+</head>
+<body>
+
+    <div id="container" class='container'></div>
+
+    <script src="https://fb.me/react-15.1.0.js"></script>
+    <script src="https://fb.me/react-dom-15.1.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
+    <script type="text/babel">
+      const TodoForm = ({addTodo}) => {
+
+        let input;
+
+        return (
+          <div>
+            <input ref={node => {
+              input = node;
+            }} />
+            <button onClick={() => {
+              addTodo(input.value);
+              input.value = '';
+            }}>
+              +
+            </button>
+          </div>
+        );
+      };
+
+      const Todo = ({todo, remove}) => {
+        // each todo
+        return (<li onClick={() =>
+            {remove(todo.id)}}>
+            {todo.text}</li>);
+      }
+
+      const TodoList = ({todos, remove}) => {
+        // map through todos
+        const todoNode = todos.map((todo) => {
+          return (<Todo todo={todo} key={todo.id} remove={remove}/>)
+        });
+        return (<ul>{todoNode}</ul>);
+      }
+
+      // container
+      class TodoApp extends React.Component{
+        render(){
+          return (
+            <div>
+              <TodoForm />
+              <TodoList todos={[{id:999, text:'text'}]}/>
+            </div>
+          );
+        }
+      }
+      ReactDOM.render(<TodoApp />, document.getElementById('container'));
+    </script>
+</body>
+</html>
