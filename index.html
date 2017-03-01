@@ -12,6 +12,17 @@
     <script src="https://fb.me/react-dom-15.1.0.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
     <script type="text/babel">
+      console.clear();
+      const Title = () => {
+        return (
+          <div>
+            <div>
+              <h1>To-do</h1>
+            </div>
+          </div>
+        );
+      }
+
       const TodoForm = ({addTodo}) => {
 
         let input;
@@ -47,12 +58,47 @@
       }
 
       // container
+
+      // todo id
+      window.id = 0;
       class TodoApp extends React.Component{
+        constructor(props) {
+          // pass props to parent class
+          super(props);
+          // set initial state
+          this.state = {
+            data: []
+          }
+        }
+
+        // add todo handler
+        addTodo(val){
+          // assemble data
+          const todo = { text: val, id: window.id++ }
+          // update data
+          this.state.data.push(todo);
+          // update state
+          this.setState({ data: this.state.data });
+        }
+        // handle remove
+        handleRemove(id) {
+          // filter all todos except one being removed
+          const remainder = this.state.data.filter((todo) => {
+            if(todo.id !== id) return todo;
+          });
+          // update state with filter
+          this.setState({ data: remainder });
+        }
+
         render(){
           return (
             <div>
-              <TodoForm />
-              <TodoList todos={[{id:999, text:'text'}]}/>
+              <Title />
+              <TodoForm addTodo={ this.addTodo.bind(this) } />
+              <TodoList
+                todos={ this.state.data }
+                remove={ this.handleRemove.bind(this) }
+              />
             </div>
           );
         }
