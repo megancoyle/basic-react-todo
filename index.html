@@ -72,7 +72,7 @@
           }
           this.apiURL = this.apiUrl = 'http://58b6e309889438120003f1ce.mockapi.io/todos'
         }
-        lifecycle method
+        // lifecycle method
         componentDidMount() {
           // make http request with axios
           axios.get(this.apiUrl)
@@ -84,31 +84,36 @@
 
         // add todo handler
         addTodo(val){
-          // assemble data
-          const todo = { text: val, id: window.id++ }
-          // update data
-          this.state.data.push(todo);
-          // update state
-          this.setState({ data: this.state.data });
+          // Assemble data
+          const todo = {text: val}
+          // Update data
+          axios.post(this.apiUrl, todo)
+             .then((res) => {
+                this.state.data.push(res.data);
+                this.setState({data: this.state.data});
+             });
         }
         // handle remove
         handleRemove(id) {
-          // filter all todos except one being removed
+          // Filter all todos except the one to be removed
           const remainder = this.state.data.filter((todo) => {
             if(todo.id !== id) return todo;
           });
-          // update state with filter
-          this.setState({ data: remainder });
+          // Update state with filter
+          axios.delete(this.apiUrl+'/'+id)
+            .then((res) => {
+              this.setState({data: remainder});
+            })
         }
 
         render(){
           return (
             <div>
-              <Title />
-              <TodoForm addTodo={ this.addTodo.bind(this) } />
+              <Title todoCount={this.state.data.length}/>
+              <TodoForm addTodo={this.addTodo.bind(this)}/>
               <TodoList
-                todos={ this.state.data }
-                remove={ this.handleRemove.bind(this) }
+                todos={this.state.data}
+                remove={this.handleRemove.bind(this)}
               />
             </div>
           );
